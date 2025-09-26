@@ -1,0 +1,85 @@
+services:
+  redis:
+    image: redis:7-alpine
+    command: ['redis-server', '--appendonly', 'yes']
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  dynamodb:
+    image: amazon/dynamodb-local:2.5.0
+    command: ['-jar', 'DynamoDBLocal.jar', '-inMemory', '-sharedDb']
+    ports:
+      - '8000:8000'
+    volumes:
+      - dynamodb-data:/home/dynamodblocal/data
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'curl -sS http://localhost:8000/shell/ > /dev/null || exit 1',
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 10s
+
+  urlgen:
+    build:
+      context: .
+      dockerfile: services/urlgen/Dockerfile
+    env_file:
+      - ./.env.docker
+    depends_on:
+      redis:
+        condition: service_healthy
+      dynamodb:
+        condition: service_healthy
+
+  redirect:
+    build:
+      context: .
+      dockerfile: services/redirect/Dockerfile
+    env_file:
+      - ./.env.docker
+    depends_on:
+      redis:
+        condition: service_healthy
+      dynamodb:
+        condition: service_healthy
+
+  analytics:
+    build:
+      context: .
+      dockerfile: services/analytics/Dockerfile
+    env_file:
+      - ./.env.docker
+    depends_on:
+      dynamodb:
+        condition: service_healthy
+
+  gateway:
+    build:
+      context: .
+      dockerfile: services/gateway/Dockerfile
+    ports:
+      - '3000:3000'
+    env_file:
+      - ./.env.docker
+    depends_on:
+      urlgen:
+        condition: service_started
+      redirect:
+        condition: service_started
+      analytics:
+        condition: service_started
+
+volumes:
+  redis-data:
+  dynamodb-data:

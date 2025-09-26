@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package urlshortener;
+
+service UrlGen {
+  rpc Shorten (ShortenRequest) returns (ShortenResponse);
+}
+
+message ShortenRequest {
+  string long_url = 1;
+}
+
+message ShortenResponse {
+  string code = 1;
+  string short_url = 2;
+  string long_url = 3;
+  string created_at = 4;
+}
+
+service Redirect {
+  rpc Resolve (ResolveRequest) returns (ResolveResponse);
+}
+
+message ResolveRequest {
+  string code = 1;
+}
+
+message ResolveResponse {
+  bool found = 1;
+  string long_url = 2;
+}
+
+service Analytics {
+  rpc GetMetrics (MetricsRequest) returns (MetricsResponse);
+  rpc IncrementClick (ClickEvent) returns (Empty);
+}
+
+message MetricsRequest {
+  string code = 1;
+}
+
+message MetricsResponse {
+  bool found = 1;
+  string code = 2;
+  string long_url = 3;
+  int64 click_count = 4;
+  string first_click_at = 5;
+  string last_click_at = 6;
+}
+
+message ClickEvent {
+  string code = 1;
+  int32 delta = 2;
+}
+
+message Empty {}

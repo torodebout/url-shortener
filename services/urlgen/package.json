@@ -1,0 +1,22 @@
+{
+  "name": "urlshortener-urlgen",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/server.ts",
+    "start": "node --import tsx src/server.ts"
+  },
+  "dependencies": {
+    "@urlshortener/shared": "workspace:*",
+    "@aws-sdk/client-dynamodb": "^3.893.0",
+    "@aws-sdk/lib-dynamodb": "^3.893.0",
+    "@grpc/grpc-js": "^1.10.8",
+    "@grpc/proto-loader": "^0.7.13",
+    "ioredis": "^5.7.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2",
+    "@types/node": "^24.5.2"
+  }
+}

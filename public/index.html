@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>URL Shortener</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="hero">
+        <!-- <h1>URL Shortener</h1> -->
+        <p class="sub">
+          Paste a link, get a short URL, and share it instantly.
+        </p>
+      </header>
+
+      <main class="card">
+        <form id="shorten-form" class="form">
+          <label for="longUrl" class="visually-hidden">URL to shorten</label>
+          <input
+            id="longUrl"
+            type="url"
+            placeholder="https://example.com/very/long/path"
+            required
+          />
+          <button id="submitBtn" type="submit">
+            <span class="btn-label">Shorten</span>
+            <span class="spinner" aria-hidden="true"></span>
+          </button>
+        </form>
+
+        <div id="result" class="result" hidden>
+          <p class="label">Short URL</p>
+          <a
+            id="shortLink"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+          ></a>
+          <button id="copyBtn" type="button">Copy</button>
+        </div>
+
+        <p class="hint">
+          Tip: use a valid http(s) link. Your short URL will appear here.
+        </p>
+      </main>
+    </div>
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>
