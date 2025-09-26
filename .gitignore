@@ -1,0 +1,10 @@
+# Node
+node_modules/
+.vscode/
+.vscode/*.*
+.DS_Store
+
+# # Env files
+# .env
+# .env.*
+# !.env.docker
